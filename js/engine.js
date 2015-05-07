@@ -1,5 +1,3 @@
-var dt;
-
 var Engine = (function(global) {
     var doc = global.document,
         win = global.window,
@@ -12,21 +10,21 @@ var Engine = (function(global) {
     doc.body.appendChild(canvas);
 
     function main() {
-        var now = Date.now();
-        dt = (now - lastTime) / 1000;
+        var now = Date.now(),
+            dt = (now - lastTime) / 1000;
         update(dt);
         render();
-
-        /* Set our lastTime variable which is used to determine the time delta
-         * for the next time this function is called.
-         */
         lastTime = now;
-
-        /* Use the browser's requestAnimationFrame function to call this
-         * function again as soon as the browser is able to draw another frame.
-         */
-        win.requestAnimationFrame(main);
+        if (player.alive){
+          win.requestAnimationFrame(main);
+        } else {
+          gameOver();
+        }
     };
+
+    function gameOver () {
+      
+    }
 
     /* This function does some initial setup that should only occur once,
      * particularly setting the lastTime variable that is required for the
@@ -49,7 +47,21 @@ var Engine = (function(global) {
      */
     function update(dt) {
         updateEntities(dt);
-        // checkCollisions();
+        checkCollisions();
+    }
+
+    function checkCollisions() {
+      bullets.forEach(function(bullet, i) {
+        if (bullet.x < -75 || bullet.x > 750 || bullet.y < -125 || bullet.y > 575) {
+          bullets.splice(i,1)
+        }
+        allEnemies.forEach(function(enemy, j) {
+          if (Math.abs(enemy.x - bullet.x) < 30 && Math.abs(enemy.y - bullet.y) < 30) {
+            bullets.splice(i,1);
+            allEnemies.splice(j, 1);
+          }
+        })
+      });
     }
 
     /* This is called by the update function  and loops through all of the
@@ -60,17 +72,13 @@ var Engine = (function(global) {
      * render methods.
      */
     function updateEntities(dt) {
-        allEnemies.forEach(function(enemy) {
-          enemy.update(dt);
-        });
         player.update(dt);
         crosshair.update(dt);
         bullets.forEach(function(bullet, i) {
-          if (bullet.x < -75 || bullet.x > 750 || bullet.y < -125 || bullet.y > 575) {
-            bullets.splice(i,1)
-          } else {
-            bullet.update(dt);
-          }
+          bullet.update(dt);
+        });
+        allEnemies.forEach(function(enemy) {
+          enemy.update(dt);
         });
     }
 
@@ -104,6 +112,10 @@ var Engine = (function(global) {
         bullets.forEach(function(bullet) {
           bullet.render();
         });
+        if (allEnemies.length < 30) {
+          var enemy = new Dumbzombies();
+          allEnemies.push(enemy);
+        }
     }
 
     /* This function does nothing but it could have been a good place to
@@ -136,14 +148,3 @@ var Engine = (function(global) {
      */
     global.ctx = ctx;
 })(this);
-
-document.addEventListener('mousemove', function (event) {
-  event.preventDefault();
-  crosshair.x = event.clientX - ctx.canvas.offsetLeft;
-  crosshair.y = event.clientY - ctx.canvas.offsetTop;
-});
-document.addEventListener('click', function (event) {
-  event.preventDefault();
-  var bullet = new Bullet();
-  bullets.push(bullet)
-});
