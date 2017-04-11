@@ -26,7 +26,7 @@ Dumbzombies.prototype.update = function() {
   this.getDirection();
   if ((player.x < this.x + 50 && player.x > this.x - 50) &&
     (player.y < this.y + 50 && player.y > this.y - 50)) {
-      alert('YOUR DEAD')
+      alert('YOU\'RE DEAD')
       player.alive = false
   }
 }
