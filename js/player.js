@@ -4,8 +4,8 @@ var Player = function () {
   this.kills = 0
   this.map = {}
   this.sprite = 'images/char-boy.png'
-  this.x = 335
-  this.y = 225
+  this.x = 410
+  this.y = 150
 }
 
 Player.prototype.handleInput = function (keycode, status) {
@@ -13,10 +13,7 @@ Player.prototype.handleInput = function (keycode, status) {
 }
 
 Player.prototype.update = function (dt) {
-}
-
-Player.prototype.render = function (dt) {
-  if (this.map['left'] && this.map['up']) {
+    if (this.map['left'] && this.map['up']) {
     this.x = this.x - (this.speed / Math.sqrt(2))
     this.y = this.y - (this.speed / Math.sqrt(2))
   } else if (this.map['left'] && this.map['down']) {
@@ -40,17 +37,20 @@ Player.prototype.render = function (dt) {
 
   if (this.x < -50) {
     this.x = -50
-  } else if (this.x > 720) {
-    this.x = 720
+  } else if (this.x > 960) {
+    this.x = 960
   }
 
   if (this.y < -100) {
     this.y = -100
-  } else if (this.y > 550) {
-    this.y = 550
+  } else if (this.y > 540) {
+    this.y = 540
   }
+}
 
+Player.prototype.render = function (dt) {
   ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 }
 
-var player = new Player();
+var player;
+var reset;

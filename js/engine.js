@@ -3,48 +3,43 @@ var Engine = (function(global) {
         win = global.window,
         canvas = doc.createElement('canvas'),
         ctx = canvas.getContext('2d'),
+        init_menu_element = doc.getElementById("init-menu"),
+        game_over_menu_element = doc.getElementById("game-over-menu"),
+        reset_buttons = doc.getElementsByClassName("reset-button"),
+        menu_button = doc.getElementById('menu-button'),
         lastTime;
 
-    canvas.width = 784;
-    canvas.height = 639;
+    canvas.width = 960;
+    canvas.height = 540;
     doc.body.appendChild(canvas);
+    for (var i = 0; i < reset_buttons.length; i++) {
+        reset_buttons[i].addEventListener('click', reset);
+    }
+    menu_button.addEventListener("click", menu)
 
     function main() {
         var now = Date.now(),
             dt = (now - lastTime) / 1000;
         update(dt);
-        render();
+        renderEntities();
         lastTime = now;
         if (player.alive){
-          win.requestAnimationFrame(main);
+            win.requestAnimationFrame(main);
         } else {
-          gameOver();
+            gameOver();
         }
     };
 
     function gameOver () {
-      
+        game_over_menu_element.style.display = "block"
     }
 
-    /* This function does some initial setup that should only occur once,
-     * particularly setting the lastTime variable that is required for the
-     * game loop.
-     */
-    function init() {
-        reset();
-        lastTime = Date.now();
-        main();
+    function menu() {
+        ctx.drawImage(Resources.get('images/background.jpeg'), 0, 0)
+        game_over_menu_element.style.display = "none"
+        init_menu_element.style.display = "block"
     }
 
-    /* This function is called by main (our game loop) and itself calls all
-     * of the functions which may need to update entity's data. Based on how
-     * you implement your collision detection (when two entities occupy the
-     * same space, for instance when your character should die), you may find
-     * the need to add an additional function call here. For now, we've left
-     * it commented out - you may or may not want to implement this
-     * functionality this way (you could just implement collision detection
-     * on the entities themselves within your app.js file).
-     */
     function update(dt) {
         updateEntities(dt);
         checkCollisions();
@@ -52,7 +47,7 @@ var Engine = (function(global) {
 
     function checkCollisions() {
       bullets.forEach(function(bullet, i) {
-        if (bullet.x < -75 || bullet.x > 750 || bullet.y < -125 || bullet.y > 575) {
+        if (bullet.x < -100 || bullet.x > 960 || bullet.y < -170 || bullet.y > 540) {
           bullets.splice(i,1)
         }
         allEnemies.forEach(function(enemy, j) {
@@ -64,13 +59,6 @@ var Engine = (function(global) {
       });
     }
 
-    /* This is called by the update function  and loops through all of the
-     * objects within your allEnemies array as defined in app.js and calls
-     * their update() methods. It will then call the update function for your
-     * player object. These update methods should focus purely on updating
-     * the data/properties related to  the object. Do your drawing in your
-     * render methods.
-     */
     function updateEntities(dt) {
         player.update(dt);
         crosshair.update(dt);
@@ -82,28 +70,8 @@ var Engine = (function(global) {
         });
     }
 
-    /* This function initially draws the "game level", it will then call
-     * the renderEntities function. Remember, this function is called every
-     * game tick (or loop of the game engine) because that's how games work -
-     * they are flipbooks creating the illusion of animation but in reality
-     * they are just drawing the entire screen over and over.
-     */
-    function render() {
-        /* This array holds the relative URL to the image used
-         * for that particular row of the game level.
-         */
-        ctx.drawImage(Resources.get('images/background.jpg'), 0, 0)
-        renderEntities();
-    }
-
-    /* This function is called by the render function and is called on each game
-     * tick. It's purpose is to then call the render functions you have defined
-     * on your enemy and player entities within app.js
-     */
     function renderEntities() {
-        /* Loop through all of the objects within the allEnemies array and call
-         * the render function you have defined.
-         */
+        ctx.drawImage(Resources.get('images/background.jpeg'), 0, 0)
         allEnemies.forEach(function(enemy) {
             enemy.render();
         });
@@ -118,20 +86,25 @@ var Engine = (function(global) {
         }
     }
 
-    /* This function does nothing but it could have been a good place to
-     * handle game reset states - maybe a new game menu or a game over screen
-     * those sorts of things. It's only called once by the init() method.
-     */
     function reset() {
-        // noop
+        removeEventListeners();
+        player = new Player();
+        allEnemies = [];
+        for (var i = 0; i < 30; i++) {
+          var enemy = new Dumbzombies();
+          allEnemies.push(enemy)
+        }
+        crosshair = new Crosshair();
+        bullets = [];
+        game_over_menu_element.style.display = "none"
+        init_menu_element.style.display = "none"
+        addEventListeners();
+        lastTime = Date.now();
+        main();
     }
 
-    /* Go ahead and load all of the images we know we're going to need to
-     * draw our game level. Then set init as the callback method, so that when
-     * all of these images are properly loaded our game will start.
-     */
     Resources.load([
-        'images/background.jpg',
+        'images/background.jpeg',
         'images/Rock.png',
         'images/crosshair.png',
         'images/stone-block.png',
@@ -140,11 +113,7 @@ var Engine = (function(global) {
         'images/enemy-bug.png',
         'images/char-boy.png'
     ]);
-    Resources.onReady(init);
+    Resources.onReady(menu);
 
-    /* Assign the canvas' context object to the global variable (the window
-     * object when run in a browser) so that developer's can use it more easily
-     * from within their app.js files.
-     */
     global.ctx = ctx;
 })(this);

@@ -11,4 +11,4 @@ Crosshair.prototype.render = function (dt) {
   ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 }
 
-var crosshair = new Crosshair();
+var crosshair;

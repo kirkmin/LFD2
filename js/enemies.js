@@ -6,17 +6,17 @@ var Dumbzombies = function() {
   if (randomIndex === 0) {
     this.x = -100
   } else if (randomIndex === 1) {
-    this.x = 770
+    this.x = 960
   } else {
-    this.x = (Math.random() * 870) - 50
+    this.x = (Math.random() * 1060) - 100
   }
 
   if (randomIndex === 2) {
-    this.y = -150
+    this.y = -170
   } else if (randomIndex === 3) {
-    this.y = 600
+    this.y = 540
   } else {
-    this.y = (Math.random() * 750) - 100
+    this.y = (Math.random() * 710) - 170
   }
 
   this.speed = 5
@@ -24,10 +24,8 @@ var Dumbzombies = function() {
 
 Dumbzombies.prototype.update = function() {
   this.getDirection();
-  if ((player.x < this.x + 50 && player.x > this.x - 50) &&
-    (player.y < this.y + 50 && player.y > this.y - 50)) {
-      alert('YOU\'RE DEAD')
-      player.alive = false
+  if ((player.x < this.x + 50 && player.x > this.x - 50) && (player.y < this.y + 50 && player.y > this.y - 50)) {
+    player.alive = false
   }
 }
 
@@ -56,16 +54,16 @@ Dumbzombies.prototype.getDirection = function () {
     this.y = this.y + this.speed
   }
 
-  if (this.x < -100) {
+  if (this.x <= -100) {
     this.x = -100
-  } else if (this.x > 770) {
-    this.x = 770
+  } else if (this.x >= 960) {
+    this.x = 960
   }
 
-  if (this.y < -150) {
-    this.y = -150
-  } else if (this.y > 600) {
-    this.y = 600
+  if (this.y <= -170) {
+    this.y = -170
+  } else if (this.y >= 540) {
+    this.y = 540
   }
 }
 
@@ -73,8 +71,4 @@ Dumbzombies.prototype.render = function() {
   ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 }
 
-var allEnemies = [];
-for (var i = 0; i < 30; i++) {
-  var enemy = new Dumbzombies();
-  allEnemies.push(enemy)
-}
+var allEnemies;
