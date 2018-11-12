@@ -1,4 +1,4 @@
-document.addEventListener('keydown', function(e) {
+function keyDownHandler(e) {
   e.preventDefault();
   var allowedKeys = {
     65: 'left',
@@ -12,9 +12,9 @@ document.addEventListener('keydown', function(e) {
   };
 
   player.handleInput(allowedKeys[e.keyCode], true);
-});
+}
 
-document.addEventListener('keyup', function(e) {
+function keyUpHandler(e) {
   e.preventDefault();
   var allowedKeys = {
     65: 'left',
@@ -28,17 +28,30 @@ document.addEventListener('keyup', function(e) {
   };
 
   player.handleInput(allowedKeys[e.keyCode], false);
-});
+}
 
+function mouseMoveHandler(e) {
+  e.preventDefault();
+  crosshair.x = e.clientX - ctx.canvas.offsetLeft;
+  crosshair.y = e.clientY - ctx.canvas.offsetTop;
+}
 
-document.addEventListener('mousemove', function (event) {
-  event.preventDefault();
-  crosshair.x = event.clientX - ctx.canvas.offsetLeft;
-  crosshair.y = event.clientY - ctx.canvas.offsetTop;
-});
-
-document.addEventListener('click', function (event) {
-  event.preventDefault();
+function clickHandler(e) {
+  e.preventDefault();
   var bullet = new Bullet();
   bullets.push(bullet)
-});
+}
+
+function addEventListeners() {
+  document.addEventListener('keydown', keyDownHandler);
+  document.addEventListener('keyup', keyUpHandler);
+  document.addEventListener('mousemove', mouseMoveHandler);
+  document.addEventListener('click', clickHandler);
+}
+
+function removeEventListeners() {
+  document.removeEventListener('keydown', keyDownHandler);
+  document.removeEventListener('keyup', keyUpHandler);
+  document.removeEventListener('mousemove', mouseMoveHandler);
+  document.removeEventListener('click', clickHandler);
+}

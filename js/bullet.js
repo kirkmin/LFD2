@@ -1,10 +1,11 @@
 var Bullet = function () {
-  this.alive = true
   this.sprite = 'images/Rock.png'
-  this.x = player.x
-  this.y = player.y
-  this.targetx = crosshair.x - 20
-  this.targety = crosshair.y - 90
+  this.width = 45
+  this.height = 45
+  this.x = player.x + (player.width - this.width)/2
+  this.y = player.y + (player.height - this.height)/2
+  this.targetx = crosshair.x + (crosshair.width - this.width)/2
+  this.targety = crosshair.y + (crosshair.height - this.height)/2
   if (this.targetx - this.x > 0) {
     this.mag = 10
   } else {
@@ -22,6 +23,7 @@ Bullet.prototype.update = function (dt) {
 
 Bullet.prototype.render = function () {
   ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+  // ctx.strokeRect(this.x, this.y, this.width, this.height);
 }
 
-var bullets = [];
+var bullets;
