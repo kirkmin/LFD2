@@ -8,10 +8,11 @@ var Dumbzombie = function() {
   this.alive = true
   this.width = 32
   this.height = 40
-  this.speed = 3
+  this.speed = 2
   this.direction_number = 0
   this.walkNumber = Math.floor(Math.random() * 4) + 1
   this.sprite = 'images/zombie_n_skeleton2.png';
+  this.score = 15
 
   if (randomIndex === 0) {
     this.x = 0 - this.width
@@ -103,6 +104,7 @@ Dumbzombie.prototype.takeHit = function(bullet) {
   this.y += bullet.movey
   if (this.hitpoints <= 0) {
     this.alive = false
+    player.score += this.score
   }
   return this.alive
 }

@@ -8,6 +8,7 @@ var Player = function () {
   this.sprite = 'images/char-boy.png'
   this.x = 410
   this.y = 150
+  this.score = 0
 }
 
 Player.prototype.handleInput = function (keycode, status) {

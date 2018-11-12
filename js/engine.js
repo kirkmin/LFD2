@@ -7,6 +7,7 @@ var Engine = (function(global) {
         game_over_menu_element = doc.getElementById("game-over-menu"),
         reset_buttons = doc.getElementsByClassName("reset-button"),
         menu_button = doc.getElementById('menu-button'),
+        score_span = doc.getElementById('score-span'),
         lastTime;
 
     canvas.width = 960;
@@ -85,6 +86,7 @@ var Engine = (function(global) {
         smartZombies.forEach(function(smartZombie) {
           smartZombie.update(dt);
         });
+        score_span.innerHTML = player.score
     }
 
     function renderEntities() {

@@ -13,6 +13,7 @@ var Smartzombie = function() {
   this.walkNumber = Math.floor(Math.random() * 4) + 1
   this.sprite = 'images/zombie_n_skeleton2.png';
   this.angle = Math.floor(Math.random() * 360) - 180;
+  this.score = 10
 
   if (randomIndex === 0) {
     this.x = 0 - this.width
@@ -92,6 +93,7 @@ Smartzombie.prototype.takeHit = function(bullet) {
   this.y += bullet.movey
   if (this.hitpoints <= 0) {
     this.alive = false
+    player.score += this.score
   }
   return this.alive
 }
