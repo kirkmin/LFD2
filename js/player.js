@@ -1,4 +1,6 @@
 var Player = function () {
+  this.width = 69
+  this.height = 79
   this.speed = 5
   this.alive = true
   this.kills = 0
@@ -35,22 +37,22 @@ Player.prototype.update = function (dt) {
     this.y = this.y + this.speed
   }
 
-  if (this.x < -50) {
-    this.x = -50
-  } else if (this.x > 960) {
-    this.x = 960
+  if (this.x < 0) {
+    this.x = 0
+  } else if (this.x > 960 - this.width) {
+    this.x = 960 - this.width
   }
 
-  if (this.y < -100) {
-    this.y = -100
-  } else if (this.y > 540) {
-    this.y = 540
+  if (this.y < 0) {
+    this.y = 0
+  } else if (this.y > 540 - this.height) {
+    this.y = 540 - this.height
   }
 }
 
 Player.prototype.render = function (dt) {
   ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+  // ctx.strokeRect(this.x, this.y, this.width, this.height);
 }
 
 var player;
-var reset;

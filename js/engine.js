@@ -32,12 +32,14 @@ var Engine = (function(global) {
 
     function gameOver () {
         game_over_menu_element.style.display = "block"
+        canvas.style.cursor = "auto"
     }
 
     function menu() {
         ctx.drawImage(Resources.get('images/background.jpeg'), 0, 0)
         game_over_menu_element.style.display = "none"
         init_menu_element.style.display = "block"
+        canvas.style.cursor = "auto"
     }
 
     function update(dt) {
@@ -50,11 +52,23 @@ var Engine = (function(global) {
         if (bullet.x < -100 || bullet.x > 960 || bullet.y < -170 || bullet.y > 540) {
           bullets.splice(i,1)
         }
-        allEnemies.forEach(function(enemy, j) {
-          if (Math.abs(enemy.x - bullet.x) < 30 && Math.abs(enemy.y - bullet.y) < 30) {
-            bullets.splice(i,1);
-            allEnemies.splice(j, 1);
-          }
+        dumbZombies.forEach(function(dumbZombie, j) {
+            if ((bullet.x > dumbZombie.x - bullet.width + dumbZombie.leeway && bullet.x < dumbZombie.x + dumbZombie.width - dumbZombie.leeway) &&
+            (bullet.y > dumbZombie.y - bullet.height + dumbZombie.leeway && bullet.y < dumbZombie.y + dumbZombie.height - dumbZombie.leeway)) {
+                bullets.splice(i,1);
+                if (!dumbZombie.takeHit(bullet)) {
+                    dumbZombies.splice(j, 1);
+                }
+            }
+        })
+        smartZombies.forEach(function(smartZombie, j) {
+            if ((bullet.x > smartZombie.x - bullet.width + smartZombie.leeway && bullet.x < smartZombie.x + smartZombie.width - smartZombie.leeway) &&
+            (bullet.y > smartZombie.y - bullet.height + smartZombie.leeway && bullet.y < smartZombie.y + smartZombie.height - smartZombie.leeway)) {
+                bullets.splice(i,1);
+                if (!smartZombie.takeHit(bullet)) {
+                    smartZombies.splice(j, 1);
+                }
+            }
         })
       });
     }
@@ -65,39 +79,55 @@ var Engine = (function(global) {
         bullets.forEach(function(bullet, i) {
           bullet.update(dt);
         });
-        allEnemies.forEach(function(enemy) {
-          enemy.update(dt);
+        dumbZombies.forEach(function(dumbZombie) {
+          dumbZombie.update(dt);
+        });
+        smartZombies.forEach(function(smartZombie) {
+          smartZombie.update(dt);
         });
     }
 
     function renderEntities() {
         ctx.drawImage(Resources.get('images/background.jpeg'), 0, 0)
-        allEnemies.forEach(function(enemy) {
-            enemy.render();
+        dumbZombies.forEach(function(dumbZombie) {
+            dumbZombie.render();
+        });
+        smartZombies.forEach(function(smartZombie) {
+            smartZombie.render();
         });
         player.render();
         crosshair.render();
         bullets.forEach(function(bullet) {
           bullet.render();
         });
-        if (allEnemies.length < 30) {
-          var enemy = new Dumbzombies();
-          allEnemies.push(enemy);
+        if (dumbZombies.length < 30) {
+          var dumbZombie = new Dumbzombie();
+          dumbZombies.push(dumbZombie);
+        }
+        if (smartZombies.length < 5) {
+          var smartZombie = new Smartzombie();
+          smartZombies.push(smartZombie);
         }
     }
 
     function reset() {
         removeEventListeners();
         player = new Player();
-        allEnemies = [];
+        dumbZombies = [];
         for (var i = 0; i < 30; i++) {
-          var enemy = new Dumbzombies();
-          allEnemies.push(enemy)
+          var dumbZombie = new Dumbzombie();
+          dumbZombies.push(dumbZombie)
+        }
+        smartZombies = [];
+        for (var i = 0; i < 5; i++) {
+          var smartZombie = new Smartzombie();
+          smartZombies.push(smartZombie)
         }
         crosshair = new Crosshair();
         bullets = [];
         game_over_menu_element.style.display = "none"
         init_menu_element.style.display = "none"
+        canvas.style.cursor = "none"
         addEventListeners();
         lastTime = Date.now();
         main();
@@ -107,10 +137,7 @@ var Engine = (function(global) {
         'images/background.jpeg',
         'images/Rock.png',
         'images/crosshair.png',
-        'images/stone-block.png',
-        'images/water-block.png',
-        'images/grass-block.png',
-        'images/enemy-bug.png',
+        'images/zombie_n_skeleton2.png',
         'images/char-boy.png'
     ]);
     Resources.onReady(menu);

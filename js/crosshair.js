@@ -1,7 +1,9 @@
 var Crosshair = function () {
   this.sprite = 'images/crosshair.png'
-  this.x = 335
-  this.y = 225
+  this.width = 48
+  this.height = 48
+  this.x = -1000
+  this.y = -1000
 }
 
 Crosshair.prototype.update = function (dt) {
