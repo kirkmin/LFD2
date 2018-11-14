@@ -8,6 +8,7 @@ var Engine = (function(global) {
         reset_buttons = doc.getElementsByClassName("reset-button"),
         menu_button = doc.getElementById('menu-button'),
         score_span = doc.getElementById('score-span'),
+        game_over_score_span = doc.getElementById('game-over-score-span'),
         lastTime;
 
     canvas.width = 960;
@@ -32,6 +33,7 @@ var Engine = (function(global) {
     };
 
     function gameOver () {
+        game_over_score_span.innerHTML = player.score
         game_over_menu_element.style.display = "block"
         canvas.style.cursor = "auto"
     }

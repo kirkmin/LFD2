@@ -7,18 +7,23 @@
 <body>
     <div id="init-menu">
     	<h2>Zombie Smash!</h2>
-    	<p>Use W, A, S, D or the arrow pads to move your character!</p>
-    	<p>Aim with your mouse and click to shoot!</p>
-    	<p>Good luck!</p>
+    	<h4>Use W, A, S, D or the arrow pads to move your character!</h4>
+    	<h4>Aim with your mouse and click to shoot!</h4>
+        <p>The small green zombies wander aimlessly and take can 3 hits (15 points)</p>
+        <p>The fast skeleton zombies go straight for you but die in 1 hit (10 points)</p>
+    	<h4>Don't get caught by them! Good luck!</h4>
     	<button class="reset-button">Play!</button>
     </div>
     <div id="game-over-menu">
     	<h2>Aw, you died!</h2>
+        <h2>Your score was <span id="game-over-score-span">0</span></h2>
     	<button class="reset-button">Play again!</button>
     	<button id="menu-button">Back to Menu!</button>
     </div>
     <div id="score-div">
-        Your Score: <span id="score-span">0</span>
+        <div id="inner-score-div">
+            Your Score: <span id="score-span">0</span>
+        </div>
     </div>
     <script src="js/resources.js"></script>
     <script src="js/player.js"></script>
